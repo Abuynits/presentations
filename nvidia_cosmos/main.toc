@@ -1,6 +1,4 @@
 \beamer@sectionintoc {1}{TLDR}{3}{0}{1}
-\beamer@sectionintoc {2}{Related Work}{7}{0}{2}
-\beamer@sectionintoc {3}{Background \& Intuition}{18}{0}{3}
-\beamer@sectionintoc {4}{Diffusion for Visuomotor Policies}{30}{0}{4}
-\beamer@sectionintoc {5}{Diffusion Properties}{37}{0}{5}
-\beamer@sectionintoc {6}{Key Findings}{41}{0}{6}
+\beamer@sectionintoc {2}{Data Curation}{10}{0}{2}
+\beamer@sectionintoc {3}{Tokenizer}{15}{0}{3}
+\beamer@sectionintoc {4}{Diffusion-based WFM}{24}{0}{4}
