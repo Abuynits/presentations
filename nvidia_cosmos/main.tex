@@ -420,7 +420,7 @@
         \item From tokenizer, input is latent representation $x \in R^{T \times C \times H \times W}$ 
         \item Downsample cubes of shape $p_t, p_h, p_w$ into individual input tokens via linear layer and flatten to 1D vector
         % patchification: have input I x I x C (after encoder) and then flatten each patch and flatten image and then mapped to a 
-        \item image / videos reshaped to 1D, spatio temporal seq length $\frac{T H W}{p_t p_h p_w}$
+        \item image / videos reshaped to 1D, spatiotemporal seq length $\frac{T H W}{p_t p_h p_w}$
         % \item use $p_t = 1, ,p_h=p_w=2$
     \end{itemize}
 \end{frame}
@@ -430,13 +430,13 @@
     \begin{center}
         \includegraphics[width=0.7\textwidth]{./img/diffusion_arch.png}
     \end{center}
-    % have video, run in through tokenizer, pertubate with gaussian noise
-    % partition feature dim into 3 approx equal chunks, apply RoPE along temporral, height, width axes
+    % have video, run in through tokenizer, pertubate with Gaussian noise
+    % partition feature dim into 3 approx equal chunks, apply RoPE along temporal, height, width axes
     \begin{itemize}[label=-]
         \item partition feature dim into 3 approx equal chunks representing $T, W, H$, apply RoPE across each dimension
         % apply to the corresponding patches between splitting 
         \item Rescale temporal frequencies based on video FPS
-        \item Add an absolute (learnable) positional embedding % increases perfrormance
+        \item Add an absolute (learnable) positional embedding % increases performance
    \end{itemize}
 \end{frame}
 
@@ -449,12 +449,12 @@
     \textbf{Cross Attention:} keys and querries from T5-XXL etext encoder\newline
 
     \textbf{Query-Key Normalization} before attention (RMSNorm) 
-    % each transformer block is sequential self.attn, ccross-attn, and feed foward layers
+    % each transformer block is sequential self.attn, cross-attn, and feed-forward layers
     \begin{itemize}[label=-]
         \item  QK-norm applied before attn layers
-        \item  fucus on re-scaling, ignore re-centering aspect of normalization
+        \item  focus on re-scaling, ignore re-centering aspect of normalization
         \item Significantly reduce computation
-        % apply RMSNorm normalization across hear of each query and key matrix priori to multiplying
+        % apply RMSNorm normalization across hear of each query and key matrix before multiplying
         % only focus on re-scaling and ingoring the re-centering aspect or normalization
         % significantly reduct computation
         % then scale up by learnable parameter
@@ -472,7 +472,7 @@
             \textit{$\sim$0\% $\uparrow$ Gflops}.
             \newline
             \textbf{Cross-attention Block}\newline
-            Create sequence of lenght 2: $[t,c]$. 
+            Create sequence of length 2: $[t,c]$. 
             Modify DiT block to have additional mha block
             \textit{15\% $\uparrow$ Gflops}.
 		\end{column}
@@ -482,7 +482,7 @@
             \end{center}
 		\end{column}
 	\end{columns}
-    Is there a more efficient way to achieve performace of cross-attn with less compute? \newline
+    Is there a more efficient way to achieve performance of cross-attn with less compute? \newline
     YES: \textbf{Adaptive Layer Normalization (AdaLN)} \newline
 \end{frame}
 
@@ -542,10 +542,10 @@
     \begin{itemize}[label=-]
         \item Image and Video conditioning by concat. conditional frames $f_i$ with generated frames $f_j$ along temporal dimension,
         introducing noise to $[f_i$: $f_1, f_2, g_1, g_2]$  
-        \item binary mask concatonated along channel dimension to remove $f_i$ from loss calculation
+        \item binary mask concatenated along channel dimension to remove $f_i$ from loss calculation
    \end{itemize}
    \textbf{Prompt Upsampler:}\newline
-   WFM use detailed video descriptions during training as text inputs. \newline 
+   WFM uses detailed video descriptions during training as text inputs. \newline 
    Finetune LLM to add detail to user prompts during inference
 \end{frame}
 
@@ -571,7 +571,7 @@
             \includegraphics[width=0.8\textwidth]{./img/auto_arch.png}
 	\end{center}
     \textbf{3D positional embeddings:} 3DRoPE and 3D Absolute Positional Embeddings 
-    (sin and cos across temporal, ehight, width)\newline
+    (sin and cos across temporal, height, width)\newline
     \textbf{Cross attention:} after every self-attn \newline
 
 \end{frame}
@@ -585,8 +585,8 @@
         \item Normalizes $Q$ and $K$ before computing dot product
         \item Dot product scaled by learnable param $\gamma$ instead of $\sqrt{d_k}$\newline
     \end{itemize}
-    \textbf{Z-loss:} penalizes deviations of logics from 0
-    % prevents generating large logit values bc give instability / gradient explosions
+    \textbf{Z-loss:} penalizes deviations of logits from 0
+    % prevents generating large logit values bc give instability/gradient explosions
     \[\mathcal{L}_{\text{z-loss}} = \lambda \sum_i z_i^2\]
 
     % prevents softmax function from saturating and more efficient
@@ -600,7 +600,7 @@
         \item \textbf{Stage 1.1:} Increase context length to 34 frames
         \item \textbf{Stage 2:} Text-conditioned generation with image-video batches similar to diffusion data 
     \end{itemize}
-    \textbf{Cooling Down}: Linearly decay learning rate to 0 while training on high-quality image-vidoe pairs over 30k iterations.
+    \textbf{Cooling Down}: Linearly decay learning rate to 0 while training on high-quality image-video pairs over 30k iterations.
 
 \end{frame}
 
@@ -660,7 +660,7 @@
             \textbf{Action-based next-frame prediction:}
             \begin{itemize}
                 \item \textbf{Input:} current video frame, action vector
-                % action vector between the current and next video fram
+                % action vector between the current and next video frame
                 \item \textbf{Output:} frame robot performing action 
             \end{itemize}
             \begin{center}
@@ -679,7 +679,7 @@
             \textbf{Instruction-based video prediction:}
             \begin{itemize}[label=-]
                 \item Generate 200 hrs of EVE performing tasks
-                \item Select 12k 1-9sec eposides
+                \item Select 12k 1-9sec episodes
                 \item Label actions, then upsample with VLM
                 % tasks; naviga5tion, folding clothes
             \end{itemize}
