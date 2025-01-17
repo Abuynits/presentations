@@ -71,11 +71,10 @@
 \section{TLDR}
 \begin{frame}[t]{TLDR (part 1)}
     \textbf{Problem:} More efficient to train agents virtually which requires virtual platforms \newline
-    \pause
     \textbf{Solution:} World Foundation Models (WFMs) that can be pretrained and finetuned similar to LLMs\newline
     \begin{center}
         \includegraphics[width=0.8\textwidth]{./img/tldr_2.png}
-    \end{center} \pause
+    \end{center}
     \textbf{WFM Goal}: predict future observation $\hat{x}_{t+1}$ based on $ x_{0:t}$ and $c_t$
     \small
     \begin{itemize}[label=-]
@@ -94,7 +93,7 @@
     \begin{center}
         \includegraphics[width=\textwidth]{./img/tldr_1.png}
     \end{center} 
-    \textbf{Research Group:} NVIDIA + 1X\newline \pause
+    \textbf{Research Group:} NVIDIA + 1X\newline
     \textbf{Future Work:}
     \small
     \begin{itemize}[label=-]
@@ -148,7 +147,6 @@
 		\end{column}
         \hspace{0em}
 		\begin{column}{.5\textwidth}
-            \pause
             \textbf{Problem:} redundant / useless information \newline
             \textbf{Solution:} Filtering / Postprocessing \newline
             \textbf{Result:} $10^8$ pre-training video clips and $10^7$ finetuning clips 
@@ -158,24 +156,23 @@
 	\end{columns}
 \end{frame}
 
-\begin{frame}[t]{Splitting}
-    \textbf{Problem:} Videos have arbitrary lenghts and might contain shot transitions
-    % ex: two ppl talking in kitchen in NYC to lions in savana
-    % important to segment videos base on shot chagnes and generate consistent video clips physically plausible
-    \textbf{Shot Detection}
-    \begin{itemize}[label=-]
-        \item Generate start and end frame indices of clips using TransNetV2
-        \item Discard clips shorter than 2s, slipt clips over 60s long % (visual effects / transitions)
-        % create own internal benchmark, TransNetV2
-        % Normalize all videos to the same codec 
-    \end{itemize}
-    \pause
-    \textbf{Filtering} % remove clips with bad quality, select high-quality for fine-tuning, tailor data distrubtion for MFs
-    \begin{itemize}[label=-]
-        \item \textbf{Motion Filtering:} remove static videos / with abrupt camera motion / tag videos with differnet camera motion 
-        % create own internal benchmark, TransNetV2
-    \end{itemize}
-\end{frame}
+% \item train to minimize: \[\mathcal{L}_{NLL} = \sum_i -log \pi_\Theta(v_i | v_1, v_2, \dots, v_{i-1})\]begin{frame}[t]{Splitting}
+%     \textbf{Problem:} Videos have arbitrary lenghts and might contain shot transitions
+%     % ex: two ppl talking in kitchen in NYC to lions in savana
+%     % important to segment videos base on shot chagnes and generate consistent video clips physically plausible
+%     \textbf{Shot Detection}
+%     \begin{itemize}[label=-]
+%         \item Generate start and end frame indices of clips using TransNetV2
+%         \item Discard clips shorter than 2s, slipt clips over 60s long % (visual effects / transitions)
+%         % create own internal benchmark, TransNetV2
+%         % Normalize all videos to the same codec 
+%     \end{itemize}
+%     \textbf{Filtering} % remove clips with bad quality, select high-quality for fine-tuning, tailor data distrubtion for MFs
+%     \begin{itemize}[label=-]
+%         \item \textbf{Motion Filtering:} remove static videos / with abrupt camera motion / tag videos with differnet camera motion 
+%         % create own internal benchmark, TransNetV2
+%     \end{itemize}
+% \end{frame}
 
 
 \section{Tokenizer}
@@ -299,7 +296,6 @@
     \]
     \normalsize
     (pairwise orthogonal vectors are linearly independent)\newline
-    \pause
     The change of basis matrix from $W$ to $E$, $T_{W,E}$ is given by:
     \[T_{W,E} = 
         \begin{vmatrix}
@@ -403,202 +399,31 @@
 
 \begin{frame}[t]{Architecture (input \& 3D Patchify)}
     \vspace{-1.6em}
-    \begin{center}
-        \includegraphics[width=0.7\textwidth]{./img/diffusion_arch.png}
-    \end{center}
+	\begin{columns}[t]
+		\begin{column}{.5\textwidth}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{./img/diffusion_arch.png}
+            \end{center}
+		\end{column}
+		\begin{column}{.5\textwidth}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{./img/diff_arch_patch.png}
+            \end{center}
+		\end{column}
+	\end{columns}
     % have video, run in through tokenizer, pertubate with gaussian noise
     \textbf{3D Patchification:}
+    % DiT Process:
+    % get latent rerpesentations throug heoncdoer - decoder 
+    % diffusion happens in the latent space of the image
     \begin{itemize}[label=-]
         \item From tokenizer, input is latent representation $x \in R^{T \times C \times H \times W}$ 
         \item Downsample cubes of shape $p_t, p_h, p_w$ into individual input tokens via linear layer and flatten to 1D vector
+        % patchification: have input I x I x C (after encoder) and then flatten each patch and flatten image and then mapped to a 
         \item image / videos reshaped to 1D, spatio temporal seq length $\frac{T H W}{p_t p_h p_w}$
-        \item use $p_t = 1, ,p_h=p_w=2$
+        % \item use $p_t = 1, ,p_h=p_w=2$
     \end{itemize}
 \end{frame}
-
-\begin{frame}[t]{Architecture (positional encoding)}
-    \vspace{-1.6em}
-    \begin{center}
-        \includegraphics[width=0.7\textwidth]{./img/diffusion_arch.png}
-    \end{center}
-    % have video, run in through tokenizer, pertubate with gaussian noise
-    \textbf{Positional Encoding:}
-    \newline
-    I didnt want to hand wave it away soo... detour to ROPE!!!!
-\end{frame}
-
-\begin{frame}[t]{RoPE [Problem Formulation]}
-    $\mathbb{S}_N = \left\{w_i \right\}_{i=1}^N$: $N$ input tokens, 
-    % each token mapped to a embedidng (either learned during training or pretrained ie word2vec)
-    $\mathbb{E}_N = \left\{x_i \right\}_{i=1}^N$ be word embeddings \newline
-    with: $x_i \in \mathbb{R}^d$ embedding vector of token $w_i$ \textbf{without positional info}
-    \newline
-    \newline
-    % encode two characteristics tokens:
-    %1. tokens that are similar / related should have higher scores
-    %2. score should be higher for words that are closer together
-    self attn calculates: $q_m = f_q(x_m, m), k_n = f_k(x_n, n), v_n = f_v(x_n, n)$ with:
-    \begin{gather}\label{eq:4}
-        f_{t:t\in \left\{q,k,v\right\}} = \textbf{W}_{t:t\in \left\{q,k,v\right\}}(x_i + p_i)
-    \end{gather}
-    where $p_i$ is:
-    \[
-        \begin{cases}
-        \begin{aligned}
-        p_{2t} & = \sin\left(\frac{k}{10000} \cdot \frac{2t}{d}\right), \\
-        p_{2t+1} & = \cos\left(\frac{k}{10000} \cdot \frac{2t}{d}\right).
-        \end{aligned}
-        \end{cases}
-    \]
-\end{frame}
-
-\begin{frame}[t]{RoPE [Issue with positional encodings]}
-    % tokens that have similar embeddigns should have higher score
-    % toekns that are close to each other should have higher score
-    Lets consider a 2D case:
-    \begin{itemize}[label=-]
-        % think of dot product as magnitude and angle
-        % when multiple k,q matrices, each square shows the weight to place on the value between word at n, word at m
-        \item Similar tokens should have higher score $||q_m|| \cdot ||k_n||$ (magnitude) 
-        % further apart words are, less likely for them to be related
-        \item Closer tokens should have higher score $\Theta_{(m-n)}$
-    \end{itemize}
-    \begin{center}
-        \includegraphics[width=0.9\textwidth]{./img/rope_1.png}
-    \end{center}
-    \small Shoutout to https://www.youtube.com/watch?v=GQPOtyITy54 for visuals
-    \normalsize
-\end{frame}
-
-\begin{frame}[t]{RoPE [Issue with positional encodings (cont)]}
-    % tokens that have similar embeddigns should have higher score
-    % toekns that are close to each other should have higher score
-    Lets consider a 2D case:
-    \begin{itemize}[label=-]
-        % think of dot product as magnitude and angle
-        % when multiple k,q matrices, each square shows the weight to place on the value between word at n, word at m
-        \item Similar tokens should have higher score $||q_m|| \cdot ||k_n||$ (magnitude) 
-        % further apart words are, less likely for them to be related
-        \item Closer tokens should have higher score $\Theta_{(m-n)}$
-    \end{itemize}
-    \begin{center}
-        \includegraphics[width=0.8\textwidth]{./img/rope_2.png}
-    \end{center}
-    Problem: Combined positional and token embeddings together
-\end{frame}
-
-\begin{frame}[t]{RoPE [Reformulation]}
-    For each inner product, we want: \[q_m^T k_n = \langle f_q(x_m, m), f_k(x_n, n) \rangle = g(x_m, x_n, m - n)\]
-    In 2D case, convert vectors to complex numbers:
-    \begin{align}
-        q_m &= R_q(x_m, m)e^{i \Theta_q(x_m,m)} \\
-        k_n &= R_k(x_n, n)e^{i \Theta_k(x_n,n)} \\
-        g(x_m, x_n, n - m) &= R_g(x_m, x_n, n - m) e^{i \Theta_g(x_m, x_n, n - m)}\\
-        q_m^T &= R_q(x_m, m)e^{-i \Theta_q(x_m,m)}
-    \end{align}
-    Multiply $q_m^T \cdot k_n$ in complex numbers:
-    \begin{align}
-        q_m^T \cdot k_n = R_q(x_m, m) \cdot R_k(x_n, n) e^{i (\Theta_k(x_n,n) - \Theta_q(x_m,m))}
-    \end{align}
-    % solve and get the follwoing two equations:
-    % m - n represents relative position info between two vectors
-    % when take transpose, same as taking complex conjugate
-\end{frame}
-
-\begin{frame}[t]{RoPE [Determine Magintude]}
-    \vspace{-3em}
-    \begin{gather}\label{eq:mag}
-        R_q(x_m, m) R_k(x_n, n) = R_g(x_m, x_n, n - m)
-    \end{gather}
-    \vspace{-3em}
-    \begin{gather}\label{eq:arg}
-        \Theta_k(x_n, n) - \Theta_q(x_m, m) = \Theta_g(x_m, x_n, n - m)
-    \end{gather}
-    % will mean that equ 12 will go to 0 
-    Now suppose that $m = n$. Then left with just \ref{eq:mag} \newline
-    \[R_q(x_m, m) R_k(x_n, n) = R_g(x_m, x_n, 0)\]
-    Now set $m = n = 0$
-    \[R_g(x_m, x_n, 0) = R_q(x_m, 0) R_k(x_n, 0) = ||q|| \; ||k ||\]
-    Therefore:
-    \[R_q(x_m, m) = ||q|| \text{ and } R_k(x_n, n) = || k ||\]
-\end{frame}
-
-\begin{frame}[t]{RoPE [Determine Argument]}
-    By a similar trick setting $m=n$:
-    \begin{align}
-        \Theta_q(x_m, m) - \Theta(x_n, n) &= \Theta_g(x_m, x_n, 0)\\
-        &= \Theta(x_m, 0) - \Theta(x_n, 0) = \theta_q - \theta_k
-    \end{align}
-    Rearranging, we get:
-    \[\Theta_q(x_m, m) - \theta_q = \Theta_k(x_n, m) - \theta_k\]
-    Observe that values only related to $m$, independent if $x = x_n$ or $x = x_m$ \newline
-    Define $\phi(m)$ to be:
-    % can take either side of the equation
-    \[\phi(m) = \Theta_q(x_m, m) - \theta_q\]
-\end{frame}
-
-\begin{frame}[t]{RoPE [Determine Argument]}
-    Now consider analyzing the difference between $\phi(m + 1)$ and $\phi(m)$:
-    \begin{align}
-        \phi(m + 1) - \phi(m) &= \Theta_q(x_m, m+1) - \theta_q - (\Theta_q(x_m, m) - \theta_q)\\
-                              &= \Theta_q(x_m, m+1) - \Theta_q(x_m, m)\\
-                              &= \Theta_q(x_m, m+1) - \Theta_q(x_m, m)\\
-                              &= \Theta_g(x_m, x_m, 1)
-    \end{align}
-    $\phi(m)$ has constant difference between term regardless of $m$ so its an arithmetic sequence!\newline
-    \[\phi(m) = m \theta + \gamma\]
-\end{frame}
-
-\begin{frame}[t]{RoPE [Combining Everything]}
-    \vspace{-2.5em}
-    \begin{align}
-        % q is q_m 
-        q_m = f_q(x_m, m) &= R_q(x_m, m) e^{i \Theta_q (x_m, m)}\\
-                          &= ||q|| e^{i \Theta_q (x_m, m)}\\
-                          &= ||q|| e^{i \phi(m) + \theta_q}\\
-                          &= ||q|| e^{i m \theta + \gamma + \theta_q}\\
-                          &= ||q|| e^{i \theta_q}e^{i (m \theta + \gamma)}\\
-                          &= q e^{i (m \theta + \gamma)}
-    \end{align}
-    Recall that:
-    \[q_m = f_q(x_m, m) = W_q(x_m + p_m)\]
-    so if $p_m = 0$, then
-    \[ q_m = W_q \cdot x_m\]
-    Therefore assume no position info when $m=0$ so let $\gamma = 0$.\newline
-    % do not rotate the input
-    % cool thing get is roots of unity
-    \textbf{Final Result:}
-    \[ f_q(x_m, m) = (W_q x_m)e^{i m \theta}\]
-    \[ f_k(x_n, n) = (W_k x_n)e^{i n \theta}\]
-
-\end{frame}
-
-
-\begin{frame}[t]{RoPE [Result]}
-    Matrix form of equations in 2D
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{./img/rope_3.png}
-    \end{center}
-\end{frame}
-
-\begin{frame}[t]{RoPE [Result]}
-    Extending to multiple dimensions
-    % break q and k d dimensional in d/2 blocks will repeat for each block indep
-    % convert to block diag rotational matrix, each rotation block have own constant
-    % will depend on index across dimension
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{./img/rope_4.png}
-    \end{center}
-\end{frame}
-
-\begin{frame}[t]{RoPE [Result]}
-    Increases Sequence prediction confidence (perplexity):
-    % perplexity measures how confused model is (think predicting 5 words with = probability)
-    \begin{center}
-        \includegraphics[width=0.8\textwidth]{./img/rope_5.png}
-    \end{center}
-\end{frame}
-
 
 \begin{frame}[t]{Architecture (positional encoding)}
     \vspace{-1.6em}
@@ -634,6 +459,273 @@
         % significantly reduct computation
         % then scale up by learnable parameter
    \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Conditioning Transformer Inputs}
+    \vspace{-1.1em}
+    How to condition transformer on time step $t$, class label $c$, prompt ...? \newline
+	\begin{columns}[t]
+		\begin{column}{.5\textwidth}
+            \textbf{In-context Conditioning:}\newline
+            Append embeddings of $t$ and $c$ as two additional tokens in input sequence.
+            Remove them after final block.
+            \textit{$\sim$0\% $\uparrow$ Gflops}.
+            \newline
+            \textbf{Cross-attention Block}\newline
+            Create sequence of lenght 2: $[t,c]$. 
+            Modify DiT block to have additional mha block
+            \textit{15\% $\uparrow$ Gflops}.
+		\end{column}
+		\begin{column}{.5\textwidth}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{./img/diff_arch_norm.png}
+            \end{center}
+		\end{column}
+	\end{columns}
+    Is there a more efficient way to achieve performace of cross-attn with less compute? \newline
+    YES: \textbf{Adaptive Layer Normalization (AdaLN)} \newline
+\end{frame}
+
+\begin{frame}[t]{Conditioning Transformer Inputs}
+    \vspace{-1em}
+	\begin{columns}[t]
+		\begin{column}{.5\textwidth}
+            \textbf{Layer Norm:}
+            \[\textbf{h} = \gamma \dot N(x) + \beta, N(x) = \frac{x - \mu}{\sigma}\]
+            $\mu$ and $\sigma$ are mean and sd of $x$. $\gamma$ and $\beta$ are learnable vectors.
+
+            \textbf{Adaptive Layer Normalization (AdaLN):} \newline
+            Learn $\gamma$ and $\beta$ from sum of $t$ and $c$ embeddings.
+            \[\gamma, \beta = \text{MLP}(t + c)\]
+		\end{column}
+		\begin{column}{.5\textwidth}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{./img/diff_arch_norm.png}
+            \end{center}
+		\end{column}
+	\end{columns}
+    \vspace{1em}
+
+
+    
+    % adaptive layer norm was propossed as a way of conditioning on external info
+    % 
+    \textbf{AdaLN-Zero:}
+    Inspiration from initializing scalars (residual block as identity fn)
+    \newline
+    Compute $\alpha$ in addition to $\gamma$ and $\beta$ as scaling parameters.\newline
+    $\alpha$ initialized as 0.
+\end{frame}
+
+\begin{frame}{DiT Block}
+	\begin{center}
+            \includegraphics[width=1.0\textwidth]{./img/diff_arch_final.png}
+	\end{center}
+    \textbf{AdaLN-LoRA:}\newline
+    % how possible since DiT claim they were efficient?
+    Add LoRA to AdaLN layers, achieving 36\% reduction in parameter count, while maintaining performance.
+\end{frame}
+
+\begin{frame}{Training Details}
+    % text2world: video generation model
+    % video2world: video generation model conditioned on videos
+    \textbf{Text2World}
+    \begin{itemize}[label=-]
+        \item Interleave batches of image and video data, scaling from 512p @ 57 frames to 720p @121 frames
+        \item Organize data into 5 aspect ratios (1:1, 3:4,\dots), process frames from same bucket in each batch
+        \item Two copies of model weights: BF16 for forward and backward pass. FP32 used for parameter updates.
+        % iotroduce noise to conditional frames  to have more robust against generation mismatch
+        % add a binary mask to distinguish f_c from f_g
+        % exclude f_c from loss
+   \end{itemize}
+    \textbf{Video2World}
+    \begin{itemize}[label=-]
+        \item Image and Video conditioning by concat. conditional frames $f_i$ with generated frames $f_j$ along temporal dimension,
+        introducing noise to $[f_i$: $f_1, f_2, g_1, g_2]$  
+        \item binary mask concatonated along channel dimension to remove $f_i$ from loss calculation
+   \end{itemize}
+   \textbf{Prompt Upsampler:}\newline
+   WFM use detailed video descriptions during training as text inputs. \newline 
+   Finetune LLM to add detail to user prompts during inference
+\end{frame}
+
+\begin{frame}{Cosmos Results}
+    30-second videos generated auto-regressively conditioned on first 9 frames. 
+	\begin{center}
+            \includegraphics[width=1.0\textwidth]{./img/diff_arch_result.png}
+	\end{center}
+\end{frame}
+
+\section{autoregressive-based WFM}
+\begin{frame}{Formulation}
+    World simulation generation as next-token prediction task (LLM style).\newline
+    \vspace{-1em}
+    \begin{enumerate}[label=\arabic*.]
+        \item Tokenize video with cosmos tokenizer: $V = \left\{v_1, v_2, \dots, v_n \right\}$
+        \item train to minimize: \[\mathcal{L}_{NLL} = \sum_i -log \pi_\Theta(v_i | v_1, v_2, \dots, v_{i-1})\]
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Architecture}
+	\begin{center}
+            \includegraphics[width=0.8\textwidth]{./img/auto_arch.png}
+	\end{center}
+    \textbf{3D positional embeddings:} 3DRoPE and 3D Absolute Positional Embeddings 
+    (sin and cos across temporal, ehight, width)\newline
+    \textbf{Cross attention:} after every self-attn \newline
+
+\end{frame}
+
+\begin{frame}{Architecture}
+	\begin{center}
+            \includegraphics[width=0.6\textwidth]{./img/auto_arch.png}
+	\end{center}
+    \textbf{Query-Key Normalization (QKNorm):} 
+    \begin{itemize}[label=-]
+        \item Normalizes $Q$ and $K$ before computing dot product
+        \item Dot product scaled by learnable param $\gamma$ instead of $\sqrt{d_k}$\newline
+    \end{itemize}
+    \textbf{Z-loss:} penalizes deviations of logics from 0
+    % prevents generating large logit values bc give instability / gradient explosions
+    \[\mathcal{L}_{\text{z-loss}} = \lambda \sum_i z_i^2\]
+
+    % prevents softmax function from saturating and more efficient
+
+\end{frame}
+
+\begin{frame}{Training Details}
+    \textbf{Pre-Training}:
+    \begin{itemize}[label=-]
+        \item \textbf{Stage 1:} Predict 16 future frames conditioned on first frame (context length = 17)
+        \item \textbf{Stage 1.1:} Increase context length to 34 frames
+        \item \textbf{Stage 2:} Text-conditioned generation with image-video batches similar to diffusion data 
+    \end{itemize}
+    \textbf{Cooling Down}: Linearly decay learning rate to 0 while training on high-quality image-vidoe pairs over 30k iterations.
+
+\end{frame}
+
+\begin{frame}{Diffusion Decoder (Training)}
+    \textbf{Problem:} enc-dec tokenizer leads to blurriness, esp with discrete tokens \newline
+    \textbf{Solution:} Diffusion decoder design.
+	\begin{center}
+            \includegraphics[width=1.0\textwidth]{./img/auto_decoder_arc.png}
+	\end{center}
+    % dimension of continuous tokenizer: 16 for each token
+    % use less aggressive 8 x 8 x 8 (compression count scheme) than 8 x 16 x 16
+    % embedd each discre token to 16-dim learnable vocabulary vector
+    % more agressive compression scheme (2x more along x and y) so upsample to match cv
+    % concatonate along channel dimension ( expand first dimension of tokenizer)
+    \textbf{Result:} Higher-quality decoder that uses info in conditional input for denoising
+
+    % tokenizer uses a enc-dec, lead to blurriness and artifacts generation
+    % especially visible in discrete tokenization
+
+    % 
+\end{frame}
+
+\begin{frame}{Diffusion Decoder (Inference)}
+    During inference, video tokens conditionally inputed to decoder.
+	\begin{center}
+            \includegraphics[width=1.0\textwidth]{./img/auto_arch_inf.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}{AutoRegressive Model Results}
+    % better results anbd motion forom higher parameter count model
+	\begin{center}
+            \includegraphics[width=1.0\textwidth]{./img/auto_arch_results.png}
+	\end{center}
+\end{frame}
+
+\section{Post-Trained WFMs }
+% paper  provided 3 examples of camera control, self-driving, and manipulation
+
+
+\begin{frame}{Planner and Simulator Applications}
+    \vspace{-1em}
+	\begin{columns}[t]
+		\begin{column}{.5\textwidth}
+            \small
+            \textbf{Instruction-based video prediction:}
+            \begin{itemize}
+                \item \textbf{Input:} current video frame, text instruction
+                \item \textbf{Output:} video robot following instruction
+            \end{itemize}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{./img/post_inst.png}
+            \end{center}
+		\end{column}
+		\begin{column}{.5\textwidth}
+            \small
+            \textbf{Action-based next-frame prediction:}
+            \begin{itemize}
+                \item \textbf{Input:} current video frame, action vector
+                % action vector between the current and next video fram
+                \item \textbf{Output:} frame robot performing action 
+            \end{itemize}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{./img/post_action.png}
+            \end{center}
+		\end{column}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Datasets}
+    \vspace{-1em}
+	\begin{columns}[t]
+		\begin{column}{.5\textwidth}
+            \small
+            \textbf{Instruction-based video prediction:}
+            \begin{itemize}[label=-]
+                \item Generate 200 hrs of EVE performing tasks
+                \item Select 12k 1-9sec eposides
+                \item Label actions, then upsample with VLM
+                % tasks; naviga5tion, folding clothes
+            \end{itemize}
+		\end{column}
+		\begin{column}{.5\textwidth}
+            \small
+            \textbf{Action-based next-frame prediction:}
+            \begin{itemize}[label=-]
+                \item Bridge dataset: 20k episodes at 5 FPS of 7-DOF arm performing tasks
+                \item Each frame has action defined as 7-dim vector: \[\hspace{-1em}(\Delta x, \Delta y, \Delta z, \Delta \theta_r, \Delta \theta_p, \Delta \theta_y, \Delta_{\text{Gripper}})\]
+            \end{itemize}
+		\end{column}
+	\end{columns}
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{./img/post_ds.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Fine-tuning and Evaluation}
+    \vspace{-0.5em}
+	\begin{columns}[t]
+		\begin{column}{.5\textwidth}
+            \small
+            \textbf{Instruction-based video prediction:}
+            \begin{itemize}[label=-]
+                \item Compute T5 embeddings for instructions
+                \item \textit{added via cross-attn}
+                % tasks; naviga5tion, folding clothes
+            \end{itemize}
+		\end{column}
+		\begin{column}{.5\textwidth}
+            \small
+            \textbf{Action-based next-frame prediction:}
+            \begin{itemize}[label=-]
+                % action new modality not seen during pre-training
+                \item Add MLP to project action-vector to tensor
+                \item \textit{added via cross-attn}
+            \end{itemize}
+		\end{column}
+	\end{columns}
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{./img/post_res_inst.png}
+    \end{center}
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{./img/post_res_action.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Thank you!}

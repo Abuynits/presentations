@@ -1,4 +1,6 @@
 \beamer@sectionintoc {1}{TLDR}{3}{0}{1}
-\beamer@sectionintoc {2}{Data Curation}{10}{0}{2}
-\beamer@sectionintoc {3}{Tokenizer}{15}{0}{3}
-\beamer@sectionintoc {4}{Diffusion-based WFM}{24}{0}{4}
+\beamer@sectionintoc {2}{Data Curation}{7}{0}{2}
+\beamer@sectionintoc {3}{Tokenizer}{9}{0}{3}
+\beamer@sectionintoc {4}{Diffusion-based WFM}{17}{0}{4}
+\beamer@sectionintoc {5}{autoregressive-based WFM}{27}{0}{5}
+\beamer@sectionintoc {6}{Post-Trained WFMs }{35}{0}{6}
