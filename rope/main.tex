@@ -223,9 +223,8 @@
         q_m &= R_q(x_m, m)e^{i \Theta_q(x_m,m)} \\
         k_n &= R_k(x_n, n)e^{i \Theta_k(x_n,n)} \\
         g(x_m, x_n, n - m) &= R_g(x_m, x_n, n - m) e^{i \Theta_g(x_m, x_n, n - m)}\\
-        q_m^T &= R_q(x_m, m)e^{-i \Theta_q(x_m,m)}
     \end{align}
-    Multiply $q_m^T \cdot k_n$ in complex numbers:
+    Taking inner product between $q_m$ and $k_n$ in complex numbers:
     \begin{align}
         q_m^T \cdot k_n = R_q(x_m, m) \cdot R_k(x_n, n) e^{i (\Theta_k(x_n,n) - \Theta_q(x_m,m))}
     \end{align}
@@ -235,7 +234,7 @@
 \end{frame}
 
 \begin{frame}[t]{Determine Magintude}
-    \vspace{-3em}
+    End up with two equations:
     \begin{gather}\label{eq:mag}
         R_q(x_m, m) R_k(x_n, n) = R_g(x_m, x_n, n - m)
     \end{gather}
@@ -244,7 +243,7 @@
         \Theta_k(x_n, n) - \Theta_q(x_m, m) = \Theta_g(x_m, x_n, n - m)
     \end{gather}
     % will mean that equ 12 will go to 0 
-    Now suppose that $m = n$. Then left with just \ref{eq:mag} \newline
+    Now suppose that $m = n$. % Then left with just Eq. \ref{eq:mag} \newline
     \[R_q(x_m, m) R_k(x_n, n) = R_g(x_m, x_n, 0)\]
     Now set $m = n = 0$
     \[R_g(x_m, x_n, 0) = R_q(x_m, 0) R_k(x_n, 0) = ||q|| \; ||k ||\]
@@ -260,7 +259,7 @@
     \end{align}
     Rearranging, we get:
     \[\Theta_q(x_m, m) - \theta_q = \Theta_k(x_n, m) - \theta_k\]
-    Observe that values only related to $m$, independent if $x = x_n$ or $x = x_m$ \newline
+    Observe that values only related to $m$, independent if $x = x_n$ or $x = x_m$ (generalize to $x = x_q$ and $x = x_k$)\newline
     Let $\phi(m)$ to be:
     % can take either side of the equation
     \[\phi(m) = \Theta_q(x_m, m) - \theta_q = \Theta_k(x_n, n) - \theta_k\]

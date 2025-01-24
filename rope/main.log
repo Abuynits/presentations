@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.22)  17 JAN 2025 12:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.22)  23 JAN 2025 19:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -925,45 +925,45 @@ Package pdftex.def Info: ./img/rope_2.png  used on input line 217.
 ] [16
 
 ]
-Overfull \hbox (0.41182pt too wide) detected at line 289
+Overfull \hbox (0.41182pt too wide) detected at line 288
 []
  []
 
 
-Overfull \vbox (0.80742pt too high) detected at line 289
+Overfull \vbox (0.80742pt too high) detected at line 288
  []
 
 [17
 
 ]
-Overfull \vbox (3.98834pt too high) detected at line 313
+Overfull \vbox (3.98834pt too high) detected at line 312
  []
 
 [18
 
 ]
-<./img/rope_3.png, id=600, 811.03pt x 329.23pt>
+<./img/rope_3.png, id=599, 811.03pt x 329.23pt>
 File: ./img/rope_3.png Graphic file (type png)
 <use ./img/rope_3.png>
-Package pdftex.def Info: ./img/rope_3.png  used on input line 320.
+Package pdftex.def Info: ./img/rope_3.png  used on input line 319.
 (pdftex.def)             Requested size: 342.2953pt x 138.95384pt.
  [19
 
  <./img/rope_3.png>]
-<./img/rope_4.png, id=629, 768.8725pt x 414.54875pt>
+<./img/rope_4.png, id=628, 768.8725pt x 414.54875pt>
 File: ./img/rope_4.png Graphic file (type png)
 <use ./img/rope_4.png>
-Package pdftex.def Info: ./img/rope_4.png  used on input line 330.
+Package pdftex.def Info: ./img/rope_4.png  used on input line 329.
 (pdftex.def)             Requested size: 342.2953pt x 184.559pt.
  [20
 
  <./img/rope_4.png>] (./main.toc) [21
 
 ]
-<./img/rope_5.png, id=689, 489.83pt x 347.2975pt>
+<./img/rope_5.png, id=688, 489.83pt x 347.2975pt>
 File: ./img/rope_5.png Graphic file (type png)
 <use ./img/rope_5.png>
-Package pdftex.def Info: ./img/rope_5.png  used on input line 340.
+Package pdftex.def Info: ./img/rope_5.png  used on input line 339.
 (pdftex.def)             Requested size: 273.83728pt x 194.15671pt.
  [22
 
@@ -996,10 +996,10 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  128i,15n,123p,451b,644s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (23 pages, 1255001 bytes).
+Output written on main.pdf (23 pages, 1254844 bytes).
 PDF statistics:
- 814 PDF objects out of 1000 (max. 8388607)
- 703 compressed objects within 8 object streams
+ 813 PDF objects out of 1000 (max. 8388607)
+ 702 compressed objects within 8 object streams
  56 named destinations out of 1000 (max. 500000)
  159 words of extra memory for PDF output out of 10000 (max. 10000000)
 
