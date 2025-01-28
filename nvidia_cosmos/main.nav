@@ -39,31 +39,31 @@
 \headcommand {\beamer@framepages {15}{15}}
 \headcommand {\slideentry {3}{0}{8}{16/16}{}{0}}
 \headcommand {\beamer@framepages {16}{16}}
-\headcommand {\beamer@sectionpages {9}{16}}
-\headcommand {\beamer@subsectionpages {9}{16}}
-\headcommand {\sectionentry {4}{Diffusion-based WFM}{17}{Diffusion-based WFM}{0}}
-\headcommand {\slideentry {4}{0}{1}{17/17}{}{0}}
+\headcommand {\slideentry {3}{0}{9}{17/17}{}{0}}
 \headcommand {\beamer@framepages {17}{17}}
-\headcommand {\slideentry {4}{0}{2}{18/18}{}{0}}
+\headcommand {\beamer@sectionpages {9}{17}}
+\headcommand {\beamer@subsectionpages {9}{17}}
+\headcommand {\sectionentry {4}{Diffusion-based WFM}{18}{Diffusion-based WFM}{0}}
+\headcommand {\slideentry {4}{0}{1}{18/18}{}{0}}
 \headcommand {\beamer@framepages {18}{18}}
-\headcommand {\slideentry {4}{0}{3}{19/19}{}{0}}
+\headcommand {\slideentry {4}{0}{2}{19/19}{}{0}}
 \headcommand {\beamer@framepages {19}{19}}
-\headcommand {\slideentry {4}{0}{4}{20/20}{}{0}}
+\headcommand {\slideentry {4}{0}{3}{20/20}{}{0}}
 \headcommand {\beamer@framepages {20}{20}}
-\headcommand {\slideentry {4}{0}{5}{21/21}{}{0}}
+\headcommand {\slideentry {4}{0}{4}{21/21}{}{0}}
 \headcommand {\beamer@framepages {21}{21}}
-\headcommand {\slideentry {4}{0}{6}{22/22}{}{0}}
+\headcommand {\slideentry {4}{0}{5}{22/22}{}{0}}
 \headcommand {\beamer@framepages {22}{22}}
-\headcommand {\slideentry {4}{0}{7}{23/23}{}{0}}
+\headcommand {\slideentry {4}{0}{6}{23/23}{}{0}}
 \headcommand {\beamer@framepages {23}{23}}
-\headcommand {\slideentry {4}{0}{8}{24/24}{}{0}}
+\headcommand {\slideentry {4}{0}{7}{24/24}{}{0}}
 \headcommand {\beamer@framepages {24}{24}}
-\headcommand {\slideentry {4}{0}{9}{25/25}{}{0}}
+\headcommand {\slideentry {4}{0}{8}{25/25}{}{0}}
 \headcommand {\beamer@framepages {25}{25}}
-\headcommand {\slideentry {4}{0}{10}{26/26}{}{0}}
+\headcommand {\slideentry {4}{0}{9}{26/26}{}{0}}
 \headcommand {\beamer@framepages {26}{26}}
-\headcommand {\beamer@sectionpages {17}{26}}
-\headcommand {\beamer@subsectionpages {17}{26}}
+\headcommand {\beamer@sectionpages {18}{26}}
+\headcommand {\beamer@subsectionpages {18}{26}}
 \headcommand {\sectionentry {5}{autoregressive-based WFM}{27}{autoregressive-based WFM}{0}}
 \headcommand {\slideentry {5}{0}{1}{27/27}{}{0}}
 \headcommand {\beamer@framepages {27}{27}}
@@ -81,21 +81,23 @@
 \headcommand {\beamer@framepages {33}{33}}
 \headcommand {\slideentry {5}{0}{8}{34/34}{}{0}}
 \headcommand {\beamer@framepages {34}{34}}
-\headcommand {\beamer@sectionpages {27}{34}}
-\headcommand {\beamer@subsectionpages {27}{34}}
-\headcommand {\sectionentry {6}{Post-Trained WFMs }{35}{Post-Trained WFMs }{0}}
-\headcommand {\slideentry {6}{0}{1}{35/35}{}{0}}
+\headcommand {\slideentry {5}{0}{9}{35/35}{}{0}}
 \headcommand {\beamer@framepages {35}{35}}
-\headcommand {\slideentry {6}{0}{2}{36/36}{}{0}}
+\headcommand {\beamer@sectionpages {27}{35}}
+\headcommand {\beamer@subsectionpages {27}{35}}
+\headcommand {\sectionentry {6}{Post-Trained WFMs }{36}{Post-Trained WFMs }{0}}
+\headcommand {\slideentry {6}{0}{1}{36/36}{}{0}}
 \headcommand {\beamer@framepages {36}{36}}
-\headcommand {\slideentry {6}{0}{3}{37/37}{}{0}}
+\headcommand {\slideentry {6}{0}{2}{37/37}{}{0}}
 \headcommand {\beamer@framepages {37}{37}}
-\headcommand {\slideentry {6}{0}{4}{38/38}{}{0}}
+\headcommand {\slideentry {6}{0}{3}{38/38}{}{0}}
 \headcommand {\beamer@framepages {38}{38}}
-\headcommand {\slideentry {6}{0}{5}{39/39}{}{0}}
+\headcommand {\slideentry {6}{0}{4}{39/39}{}{0}}
 \headcommand {\beamer@framepages {39}{39}}
-\headcommand {\beamer@partpages {1}{39}}
-\headcommand {\beamer@subsectionpages {35}{39}}
-\headcommand {\beamer@sectionpages {35}{39}}
-\headcommand {\beamer@documentpages {39}}
-\headcommand {\gdef \inserttotalframenumber {39}}
+\headcommand {\slideentry {6}{0}{5}{40/40}{}{0}}
+\headcommand {\beamer@framepages {40}{40}}
+\headcommand {\beamer@partpages {1}{40}}
+\headcommand {\beamer@subsectionpages {36}{40}}
+\headcommand {\beamer@sectionpages {36}{40}}
+\headcommand {\beamer@documentpages {40}}
+\headcommand {\gdef \inserttotalframenumber {40}}

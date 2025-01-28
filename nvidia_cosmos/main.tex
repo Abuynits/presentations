@@ -35,8 +35,8 @@
 \title[Cosmos ]{World Foundation Model Platform for Physical AI}
 
 \subtitle{Cosmos} %\thanks{Beaglehole, Súkeník et.~al.~[NeurIPS 2024]}}
-\author[MLP]{A. Buynitsky} 
-\date{Jan 28, 2025}
+\author[Comma]{A. Buynitsky} 
+\date{Jan 24, 2025}
 \titlegraphic{\includegraphics[width=8cm]{./img/title.png}}
 
 %End of title page configuration block
@@ -367,35 +367,43 @@
     \textbf{Gram-matrix loss} for sharpness of reconstructed images
     \[\mathcal{L}_{\text{Gram}} = \frac{1}{L} \sum_{l=1}^{L} \sum_{t} \alpha_l \| \text{GM}_l(\hat{x}_t) - \text{GM}_l(x_t) \|_1\]
 \end{frame}
+
+\begin{frame}[t]{Results}
+    Better performance than other tokenizers for video data, 2x -12x faster \newline
+    \begin{center}
+        \includegraphics[width=\textwidth]{./img/tokenizer_res.png}
+    \end{center}
+    \textbf{PSNR (Peak Signal-to-Noise Ratio):} compare "true" pixel values of original image to degraded image.
+\end{frame}
 % results: faster / better than other tokenizers for video data, 2x -12x faster
 % have a spatila compression of 4 x 8 x 8 is best, even lower, 8 x 8 x 4 or 8 x 16 x16, have comparable perf
 \section{Diffusion-based WFM}
 
-\begin{frame}[t]{Formulation}
-    \textbf{Denoising score mathcing loss} for denoisier $D_\theta$ evaluated at noise $\sigma$ where $x_o \sim p_\text{data}$
-    and $n \sim \mathcal{N}(0, \sigma^2 \mathbf{I})$ 
-    \begin{gather}\label{eq:2}
-        \mathcal{L}(D_\theta, \sigma) = \mathbb{E}_{x_0, n} \left[ \left\| D_\theta(x_0 + n; \sigma) - x_0 \right\|_2^2 \right]
-        % x_o is clear image or video from training set, n is gauissian noise 
-        % D_o is noise condiened nn to denoise corrpited sample
-    \end{gather}
-    \textbf{Overall training loss} as weighted expectation over all noise levels:
-    \begin{gather}\label{eq:3}
-        \mathcal{L}(D_\theta) = \mathbb{E}_\sigma \left[ \frac{\lambda(\sigma)}{e^{u(\sigma)}} \mathcal{L}(D_\theta, \sigma)+ u(\sigma) \right] \\
-        % \lambda(\sigma) = \frac{\sigma^2 + \sigma_\text{data}^2}{(\sigma \cdot \sigma_\text{data})^2}\\
-        % \ln(\sigma) \sim \mathcal{N}(P_\text{mean}, P_\text{std}^2)
-    \end{gather}
-    % $P_\text{mean}$ and $P_\text{std}$ are hyperparamters and $\sigma_\text{data}$ is the data mean\newline
+% \begin{frame}[t]{Formulation}
+%     \textbf{Denoising score mathcing loss} for denoisier $D_\theta$ evaluated at noise $\sigma$ where $x_o \sim p_\text{data}$
+%     and $n \sim \mathcal{N}(0, \sigma^2 \mathbf{I})$ 
+%     \begin{gather}\label{eq:2}
+%         \mathcal{L}(D_\theta, \sigma) = \mathbb{E}_{x_0, n} \left[ \left\| D_\theta(x_0 + n; \sigma) - x_0 \right\|_2^2 \right]
+%         % x_o is clear image or video from training set, n is gauissian noise 
+%         % D_o is noise condiened nn to denoise corrpited sample
+%     \end{gather}
+%     \textbf{Overall training loss} as weighted expectation over all noise levels:
+%     \begin{gather}\label{eq:3}
+%         \mathcal{L}(D_\theta) = \mathbb{E}_\sigma \left[ \frac{\lambda(\sigma)}{e^{u(\sigma)}} \mathcal{L}(D_\theta, \sigma)+ u(\sigma) \right] \\
+%         % \lambda(\sigma) = \frac{\sigma^2 + \sigma_\text{data}^2}{(\sigma \cdot \sigma_\text{data})^2}\\
+%         % \ln(\sigma) \sim \mathcal{N}(P_\text{mean}, P_\text{std}^2)
+%     \end{gather}
+%     % $P_\text{mean}$ and $P_\text{std}$ are hyperparamters and $\sigma_\text{data}$ is the data mean\newline
 
-    % problem: as training progresses, the balance may deteriorate
-    % use uncertainty-based weighting which quantifies the uncertaining for the denoising objective at \sigma
-    $\lambda(\sigma)$: Weighting function \newline 
-    $u(\sigma)$ MLP that quantifies uncertainty of task.\newline
-    $u(\sigma)$ \textbf{weights down} loss contribution if uncertain about task ($u(\sigma)$ high)
-    $u(\sigma)$ \textbf{weights up} loss contribution if certain about task ($u(\sigma)$ low)
-    \newline
-    Model penalazied for uncertainty (want $u(\sigma)$ to be low)
-\end{frame}
+%     % problem: as training progresses, the balance may deteriorate
+%     % use uncertainty-based weighting which quantifies the uncertaining for the denoising objective at \sigma
+%     $\lambda(\sigma)$: Weighting function \newline 
+%     $u(\sigma)$ MLP that quantifies uncertainty of task.\newline
+%     $u(\sigma)$ \textbf{weights down} loss contribution if uncertain about task ($u(\sigma)$ high)
+%     $u(\sigma)$ \textbf{weights up} loss contribution if certain about task ($u(\sigma)$ low)
+%     \newline
+%     Model penalazied for uncertainty (want $u(\sigma)$ to be low)
+% \end{frame}
 
 \begin{frame}[t]{Architecture (input \& 3D Patchify)}
     \vspace{-1.6em}
@@ -454,10 +462,7 @@
         \item  QK-norm applied before attn layers
         \item  focus on re-scaling, ignore re-centering aspect of normalization
         \item Significantly reduce computation
-        % apply RMSNorm normalization across hear of each query and key matrix before multiplying
-        % only focus on re-scaling and ingoring the re-centering aspect or normalization
-        % significantly reduct computation
-        % then scale up by learnable parameter
+        % ensures that each vector has a Unit norm
    \end{itemize}
 \end{frame}
 
@@ -534,14 +539,15 @@
         \item Interleave batches of image and video data, scaling from 512p @ 57 frames to 720p @121 frames
         \item Organize data into 5 aspect ratios (1:1, 3:4,\dots), process frames from same bucket in each batch
         \item Two copies of model weights: BF16 for forward and backward pass. FP32 used for parameter updates.
+        % input to text2world model is the denoising step of diffusion
         % iotroduce noise to conditional frames  to have more robust against generation mismatch
         % add a binary mask to distinguish f_c from f_g
         % exclude f_c from loss
    \end{itemize}
     \textbf{Video2World}
     \begin{itemize}[label=-]
-        \item Image and Video conditioning by concat. conditional frames $f_i$ with generated frames $f_j$ along temporal dimension,
-        introducing noise to $[f_i$: $f_1, f_2, g_1, g_2]$  
+        \item Image and Video conditioning by concat. conditional frames $f_i$ with generated frames $g_j$ along temporal dimension
+        %introducing noise to $[f_i$: $f_1, f_2, g_1, g_2]$  
         \item binary mask concatenated along channel dimension to remove $f_i$ from loss calculation
    \end{itemize}
    \textbf{Prompt Upsampler:}\newline
@@ -634,6 +640,15 @@
     % better results anbd motion forom higher parameter count model
 	\begin{center}
             \includegraphics[width=1.0\textwidth]{./img/auto_arch_results.png}
+	\end{center}
+    % pose estimation sr: consistency in 3d
+
+\end{frame}
+
+\begin{frame}{AutoRegressing and Duffusion Results}
+    % better results anbd motion forom higher parameter count model
+	\begin{center}
+            \includegraphics[width=1.0\textwidth]{./img/wfm_results.png}
 	\end{center}
 \end{frame}
 
