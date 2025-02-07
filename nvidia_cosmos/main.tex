@@ -348,8 +348,38 @@
         \item spatio-temporal attention (ie. $1 + T'$ for last encoder block)
         % spatio-temoral attention: at time i, only attend from 0:i
     \end{itemize}
-    \textbf{Continuous:} Use vanilla Autoencoder for latent space (dim = 16)
-    \textbf{Discrete:} project using Finite-Scalar-Quantization to 64k vocab size
+    % FSQ: small dimension (they used 6), and each dimension is quantized to small set of fixed values
+\end{frame}
+
+\begin{frame}[t]{Cosmos Tokenizer}
+    \vspace{-2em}
+	\begin{columns}[t]
+		\begin{column}{.5\textwidth}
+            \begin{center}
+                \includegraphics[width=0.8\textwidth]{./img/tokenizer_2.png}
+            \end{center}
+		\end{column}
+		\begin{column}{.5\textwidth}
+            \begin{center}
+                \includegraphics[width=0.8\textwidth]{./img/tokenizer_3.png}
+            \end{center}
+		\end{column}
+	\end{columns}
+	\begin{columns}[t]
+		\begin{column}{.6\textwidth}
+            \newline
+            \newline
+            \textbf{Continuous:} \newline
+            \hspace{+4em}Use vanilla Autoencoder for latent space (dim = 16)\newline
+            \textbf{Discrete:} \newline
+            \hspace{+4em}Project using Finite-Scalar-Quantization to 64k vocab size
+		\end{column}
+		\begin{column}{.4\textwidth}
+            \begin{center}
+                \includegraphics[width=0.8\textwidth]{./img/fsq.png}
+            \end{center}
+		\end{column}
+	\end{columns}
     % FSQ: small dimension (they used 6), and each dimension is quantized to small set of fixed values
 \end{frame}
 
@@ -379,31 +409,34 @@
 % have a spatila compression of 4 x 8 x 8 is best, even lower, 8 x 8 x 4 or 8 x 16 x16, have comparable perf
 \section{Diffusion-based WFM}
 
-% \begin{frame}[t]{Formulation}
-%     \textbf{Denoising score mathcing loss} for denoisier $D_\theta$ evaluated at noise $\sigma$ where $x_o \sim p_\text{data}$
-%     and $n \sim \mathcal{N}(0, \sigma^2 \mathbf{I})$ 
-%     \begin{gather}\label{eq:2}
-%         \mathcal{L}(D_\theta, \sigma) = \mathbb{E}_{x_0, n} \left[ \left\| D_\theta(x_0 + n; \sigma) - x_0 \right\|_2^2 \right]
-%         % x_o is clear image or video from training set, n is gauissian noise 
-%         % D_o is noise condiened nn to denoise corrpited sample
-%     \end{gather}
-%     \textbf{Overall training loss} as weighted expectation over all noise levels:
-%     \begin{gather}\label{eq:3}
-%         \mathcal{L}(D_\theta) = \mathbb{E}_\sigma \left[ \frac{\lambda(\sigma)}{e^{u(\sigma)}} \mathcal{L}(D_\theta, \sigma)+ u(\sigma) \right] \\
-%         % \lambda(\sigma) = \frac{\sigma^2 + \sigma_\text{data}^2}{(\sigma \cdot \sigma_\text{data})^2}\\
-%         % \ln(\sigma) \sim \mathcal{N}(P_\text{mean}, P_\text{std}^2)
-%     \end{gather}
-%     % $P_\text{mean}$ and $P_\text{std}$ are hyperparamters and $\sigma_\text{data}$ is the data mean\newline
+\begin{frame}[t]{Formulation}
+    \textbf{Denoising score matching loss} for denoisier $D_\theta$ evaluated at noise $\sigma$ where $x_o \sim p_\text{data}$
+    and $n \sim \mathcal{N}(0, \sigma^2 \mathbf{I})$ 
+    \begin{gather}\label{eq:2}
+        % noise level sigma
+        \mathcal{L}(D_\theta, \sigma) = \mathbb{E}_{x_0, n} \left[ \left\| D_\theta(x_0 + n; \sigma) - x_0 \right\|_2^2 \right]
+        % x_o is clear image or video from training set, n is gauissian noise 
+        % D_o is noise condiened nn to denoise corrpited sample
+    \end{gather}
+    \textbf{Overall training loss} as weighted expectation over all noise levels:
+    \begin{gather}\label{eq:3}
+        \mathcal{L}(D_\theta) = \mathbb{E}_\sigma \left[ \frac{\lambda(\sigma)}{e^{u(\sigma)}} \mathcal{L}(D_\theta, \sigma)+ u(\sigma) \right] \\
+        % \lambda(\sigma) = \frac{\sigma^2 + \sigma_\text{data}^2}{(\sigma \cdot \sigma_\text{data})^2}\\
+        % \ln(\sigma) \sim \mathcal{N}(P_\text{mean}, P_\text{std}^2)
+        % lambda: weighting function for specific noise level found from std of data
+        % as training progresses: want different weights from different noise levels
+    \end{gather}
+    % $P_\text{mean}$ and $P_\text{std}$ are hyperparamters and $\sigma_\text{data}$ is the data mean\newline
 
-%     % problem: as training progresses, the balance may deteriorate
-%     % use uncertainty-based weighting which quantifies the uncertaining for the denoising objective at \sigma
-%     $\lambda(\sigma)$: Weighting function \newline 
-%     $u(\sigma)$ MLP that quantifies uncertainty of task.\newline
-%     $u(\sigma)$ \textbf{weights down} loss contribution if uncertain about task ($u(\sigma)$ high)
-%     $u(\sigma)$ \textbf{weights up} loss contribution if certain about task ($u(\sigma)$ low)
-%     \newline
-%     Model penalazied for uncertainty (want $u(\sigma)$ to be low)
-% \end{frame}
+    % problem: as training progresses, the balance may deteriorate
+    % use uncertainty-based weighting which quantifies the uncertaining for the denoising objective at \sigma
+    $\lambda(\sigma)$: Weighting function \newline 
+    $u(\sigma)$ MLP that quantifies uncertainty of task.\newline
+    $u(\sigma)$ \textbf{weights down} loss contribution if uncertain about task ($u(\sigma)$ high)
+    $u(\sigma)$ \textbf{weights up} loss contribution if certain about task ($u(\sigma)$ low)
+    \newline
+    Model penalazied for uncertainty (want $u(\sigma)$ to be low)
+\end{frame}
 
 \begin{frame}[t]{Architecture (input \& 3D Patchify)}
     \vspace{-1.6em}
@@ -454,7 +487,7 @@
     \begin{center}
         \includegraphics[width=0.7\textwidth]{./img/diffusion_arch.png}
     \end{center}
-    \textbf{Cross Attention:} keys and querries from T5-XXL etext encoder\newline
+    \textbf{Cross Attention:} keys and values from T5-XXL etext encoder\newline
 
     \textbf{Query-Key Normalization} before attention (RMSNorm) 
     % each transformer block is sequential self.attn, cross-attn, and feed-forward layers
@@ -496,7 +529,7 @@
 	\begin{columns}[t]
 		\begin{column}{.5\textwidth}
             \textbf{Layer Norm:}
-            \[\textbf{h} = \gamma \dot N(x) + \beta, N(x) = \frac{x - \mu}{\sigma}\]
+            \[\textbf{h} = \gamma (\frac{x - \mu}{\sigma}) + \beta\]
             $\mu$ and $\sigma$ are mean and sd of $x$. $\gamma$ and $\beta$ are learnable vectors.
 
             \textbf{Adaptive Layer Normalization (AdaLN):} \newline
@@ -577,8 +610,8 @@
             \includegraphics[width=0.8\textwidth]{./img/auto_arch.png}
 	\end{center}
     \textbf{3D positional embeddings:} 3DRoPE and 3D Absolute Positional Embeddings 
-    (sin and cos across temporal, height, width)\newline
-    \textbf{Cross attention:} after every self-attn \newline
+    \newline
+    % \textbf{Cross attention:} after every self-attn \newline
 
 \end{frame}
 
