@@ -71,7 +71,7 @@
 \section{RT1}
 
 \begin{frame}[t]{FiLM Layers}
-    FiLM adaptively influence output of neural network by applying a affine (linear) transformation to intermediate layers. \newline
+    FiLM adaptively influences output of neural network by applying a affine (linear) transformation to intermediate layers. \newline
     \begin{columns}
         \hspace{1em}
 		\begin{column}{.5\textwidth}
@@ -94,12 +94,12 @@
 \end{frame}
 
 \begin{frame}[t]{ \href{https://arxiv.org/pdf/1709.07871}{FiLM} Layers}
-    FiLM adaptively influence output of neural network by applying a affine (linear) transformation to intermediate layers. \newline
+    FiLM adaptively influences neural network output by applying a affine (linear) transformation to intermediate layers. \newline
     \begin{columns}
         \hspace{1em}
 		\begin{column}{.5\textwidth}
             FiLM learns functions $f$ and $h$  based on external input $x_i$ (i.e image) in a batch
-             % i is batch dimension in this case
+             % i is feature dimension in this case
             % c is cth feature dimension
             \small
                 \[\gamma_{i,c} = f_c(x_i) \quad \beta_{i,c} = h_c(x_i)\]
@@ -124,7 +124,7 @@
     by learning $S$ functions $A_i$ to adaptively select informative combo of pixels in $x_t$ denoted as:
     \[z_i = A_i(x)\]
     Implement with weight map $\alpha_i(x)$ and spatial global average pooling $\rho(x)$:
-    \[z_i = A_i(x) = \rho(x \odot \gamma(\alpha_i(x)))\]
+    \[z_i = A_i(x) = \rho(x \odot \alpha_i(x))\]
     % gamma is broadcasting function projecting to all channels
     \begin{center}
         \includegraphics[width=0.55\textwidth]{./img/tokenlearner.png}
@@ -137,9 +137,9 @@
 		\begin{column}{.5\textwidth}
             \begin{itemize}[label=-]
                 \item  \textbf{Unversal Sentence Encoder:} Encoder block of Transformer\newline
-                % encoding setnence meaning trained embedding usin other tasks ie sentiment analysis
+                % encoding sentence meaning trained embeddings using other tasks ie sentiment analysis
                 \item \textbf{FiLM Layers:} Conditions EfficientNet on text\newline
-                % important: identity initialize film layers so that at start of training is just pretrained img net
+                % important: identity initialize film layers so that at the start of training is just pretrained img net
                 \textbf{TokenLearner:} Donwsample 81 to 8 tokens per image \newline
                 \item \textbf{Transformer:} Apply transformer to FiLM output\newline
             \end{itemize}
@@ -163,7 +163,7 @@
                 \item \textbf{Action Tokenization:} Discretize continuous actions to 256 bins:
                 \begin{itemize}[label=-]
                     \item \textbf{Gripper Actions:} $x,y,z,\rho,\phi,\theta$, opening of gripper
-                    % output: lenght 11 sequence with possible 256 tokens
+                    % output: length 11 sequence with possible 256 tokens
                     % have a cross-entropy loss for training
                     \item \textbf{Base Actions:} $x,y$ head angle
                     \item \textbf{mode:} control arm, control base or terminate
@@ -188,13 +188,13 @@
     Possible instantiation: "1 128 91 241 5 101 127" \newline
     % lie before Discretize continuous actions to 256 bins. \newline
     \newline
-    \textbf{PaLI-X Tokenization:} Integers up to 1000 each have unique token, so associate action bins to token corresponding to integer \newline  
+    \textbf{PaLI-X Tokenization:} Integers up to 1000 each has unique token, so associate action bins to token corresponding to integer \newline  
     \textbf{PaLM-E Tokenization:} Overwrite the 256 least frequently used tokens to represent action vocabulary.
     \newline
     \textbf{Co-Fine-Tuning:} Train with both robotics data "Q: what action should robot take to [task instruction]? A:" and original web data. \newline
     % co-fine-tuning: balance rations of robot and web data in each training batch
-    % increase sampling weighton robt dataset over time
-    % policy explsoed to both abstract visual concepts from web dat and low-level robotic actions
+    % increase sampling weighton robot dataset over time
+    % policy explored to both abstract visual concepts from web data and low-level robotic actions
     % only constrain to sample output 
 \end{frame}
 
@@ -202,7 +202,7 @@
     % \begin{center}
     %     \includegraphics[width=0.8\textwidth]{./img/rt2.png}
     %     % start out with mixed data
-    %     % then take image, patchify (spllit 16x16 patches)
+    %     % then take image, patchify (split 16x16 patches)
     %     % then feed to Palm and get action tokens with history 
     % \end{center}
     \textbf{Prefix-decoder-only LLMs:} \newline
@@ -223,7 +223,7 @@
     \begin{center}
         \includegraphics[width=0.8\textwidth]{./img/rt2.png}
         % start out with mixed data
-        % then take image, patchify (spllit 16x16 patches)
+        % then take image, patchify (split 16x16 patches)
         % then feed to Palm and get action tokens with history 
     \end{center}
     \textbf{Results:}
@@ -244,7 +244,7 @@
             \textbf{Vision Encoder:}\newline
             \small
             Concatenate embeddings from SigLip and DinoV2 channelwise
-            % found that dinov2 has better spatial understnading tha siglip
+            % found that dinov2 has better spatial understanding than siglip
 		\end{column}
         \hspace{0em}
 		\begin{column}[t]{.33\textwidth}
@@ -264,8 +264,8 @@
 \begin{frame}[t]{Data and Tokenization Details}
     \textbf{Tokenizer}
     \begin{itemize}[label=-]
-        \item LLama tokenizer reserves 100 toeksn for fine-tuning.
-        \item Chose to follow RT2 tokenization. Discretize each dim of robot actions seperately into one of 256 bins.
+        \item LLama tokenizer reserves 100 tokens for fine-tuning.
+        \item Choose to follow RT2 tokenization. Discretize each dim of robot actions separately into one of 256 bins.
         \item Replace 256 least frequent tokens with action tokens.
     \end{itemize}
     \textbf{Training Data}
@@ -289,9 +289,9 @@
 \end{frame}
 \begin{frame}[t]{Fine-Tuning OpenVLA}
     \begin{itemize}[label=-]
-        \item \textbf{full finetune:} updats all weights during training
+        \item \textbf{full finetune:} updates all weights during training
         \item \textbf{last layer only:} finetunes only last layer of transformer backbone and embedding matrix
-        \item \textbf{sandwich} finetunes vision encoder, embedding matrix and last layer 
+        \item \textbf{sandwich} finetunes vision encoder, embedding matrix, and last layer 
         \item \textbf{LoRA} applied to all layers of the model using varying rank $r \in {32, 64}$
     \end{itemize}
     \begin{center}
@@ -312,7 +312,7 @@
             \vspace{-2em}
             \begin{center}
                 \includegraphics[width=1.2\textwidth]{./img/openvla_speed.png}
-                % reduced inference speed: ob serve a decrease in performance
+                % reduced inference speed: observe a decrease in performance
             \end{center}
 		\end{column}
         \hspace{0em}
@@ -333,9 +333,9 @@
     \begin{itemize}[label=-]
         \item joint-space mapping between smaller robot (windowX) to ViperX (6-DOF) vs VR headset
         % ik fails in fine-grained manipulation
-        \item Robot Weight prevest fast motion + reduces joint jitter 
+        \item Robot Weight prevent fast motion + reduces joint jitter 
         \item "handle and scissor" mechanism gives continuous gripping vs binary
-        \item 4x cameras: 2 wrist, one otop, one front
+        \item 4x cameras: 2 wrist, one on top, one front
         \item Total hardware cost $\leq$ 20k (compare with 50k)
         \item 
     
